@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = 'gecco_torch'
+version = '1.0.0'
+authors = [
+  { name="Michal Jan Tyszkiewicz", email="michal.tyszkiewicz@epfl.ch" },
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.10"
+
+dependencies = [
+	'lightning',
+	'multiprocess',
+	'plyfile',
+	'k3d',
+	'timm',
+	'kornia',
+	'torchvision',
+	'torch',
+	'einops',
+	'h5py',
+	'imageio',
+	'multiprocess',
+	'tqdm',
+]

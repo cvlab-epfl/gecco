@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = 'gecco_jax'
+version = '1.0.0'
+authors = [
+  { name="Michal Jan Tyszkiewicz", email="michal.tyszkiewicz@epfl.ch" },
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.10"
+
+dependencies = [
+    'torch_dimcheck @ git+https://github.com/jatentaki/torch-dimcheck.git@v2',
+    'jax==0.4.8',
+    'jaxlib==0.4.7',
+    'equinox==0.10.3',
+    'diffrax==0.3.1',
+    'flax==0.6.8',
+    'orbax==0.1.6',
+    'eqxvision @ git+https://github.com/jatentaki/eqxvision.git@equinox-0.10',
+    'optax==0.1.5',
+    'seaborn',
+    'git-python',
+    'ott-jax==0.4.0',
+    'orbax-checkpoint==0.1.8',
+    'multiprocess',
+    'plyfile',
+    'mitsuba',
+    'k3d',
+    'mediapy',
+]

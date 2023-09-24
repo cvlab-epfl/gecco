@@ -1,0 +1,15 @@
+.vscode
+__pycache__
+.ipynb_checkpoints
+lightning_logs
+*.egg-info
+build/
+__pycache__
+._*
+*DS_Store*
+*.swp
+.nfs*
+*.npy
+*.png
+*.npz
+*.mp4
