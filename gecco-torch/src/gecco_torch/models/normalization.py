@@ -1,3 +1,6 @@
+'''
+Adapts the standard normalization layers to take in a time/noise level embedding.
+'''
 import torch
 from torch import Tensor, nn
 from einops import rearrange

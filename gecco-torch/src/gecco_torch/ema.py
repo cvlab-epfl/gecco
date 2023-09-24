@@ -1,3 +1,7 @@
+'''
+A PyTorch Lightning callback for Exponential Moving Averaging (EMA) of model weights.
+Taken from https://github.com/NVIDIA/NeMo/tree/main
+'''
 # Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");

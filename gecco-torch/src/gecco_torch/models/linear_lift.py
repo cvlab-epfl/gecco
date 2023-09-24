@@ -4,6 +4,11 @@ from torch import nn, Tensor
 from gecco_torch.models.set_transformer import SetTransformer
 
 class LinearLift(nn.Module):
+    '''
+    Embeds the 3d geometry (xyz points) in a higher dimensional space, passes it through
+    the SetTransformer, and then maps it back to 3d. "Lift" refers to the embedding action.
+    This class is used in the unconditional ShapeNet experiments.
+    '''
     def __init__(
         self,
         inner: SetTransformer,
@@ -32,9 +37,9 @@ class LinearLift(nn.Module):
         do_cache: bool = False,
         cache: list[Tensor] | None = None,
     ) -> tuple[Tensor, list[Tensor] | None]:
-        del raw_context, post_context
+        del raw_context, post_context # unused
 
         features = self.lift(geometry)
-        features, out_cache = self.inner(features, embed, geometry, do_cache, cache)
+        features, out_cache = self.inner(features, embed, do_cache, cache)
         return self.lower(features), out_cache
 

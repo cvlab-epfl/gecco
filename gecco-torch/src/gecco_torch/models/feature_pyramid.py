@@ -1,3 +1,7 @@
+'''
+Wraps a pretrained feature extractor to produce a feature pyramid.
+'''
+
 from __future__ import annotations
 
 from dataclasses import dataclass

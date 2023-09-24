@@ -2,6 +2,11 @@ import torch
 import torch.nn as nn
 
 class GaussianActivation(nn.Module):
+    '''
+    Using the activation function proposed in
+    "Beyond Periodicity: Towards a Unifying Framework for Activations in Coordinate-MLPs" by Ramasinghe et al.
+    allows us to skip Fourier embedding low dimensional inputs such as noise level and 3D coordinates.
+    '''
     def __init__(self, normalized: bool = True):
         super().__init__()
         self.alpha = nn.Parameter(torch.tensor(1.0))

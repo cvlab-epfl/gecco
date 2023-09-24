@@ -1,3 +1,7 @@
+'''
+Definitions of the diffusion model itself, along with preconditioning, loss and sampling functions.
+'''
+
 from __future__ import annotations
 
 import math
@@ -14,6 +18,10 @@ def ones(n: int):
     return (1, ) * n
 
 class EDMPrecond(nn.Module):
+    '''
+    Preconditioning module wrapping a diffusion backbone. Implements the logic proposed in
+    "Elucidating the Design Space of Diffusion-Based Generative Models" by Kerras et al.
+    '''
     def __init__(self,
         model: nn.Module,
         sigma_data = 1.0,
@@ -26,11 +34,11 @@ class EDMPrecond(nn.Module):
         self,
         x: Tensor,
         sigma: Tensor,
-        raw_context: Any,
-        post_context: Any,
-        do_cache: bool = False,
-        cache: list[Tensor] | None = None,
-    ) -> tuple[Tensor, list[Tensor] | None]:
+        raw_context: Any, # raw_context comes from the dataset, before any preprocessing
+        post_context: Any, # post_context comes from the conditioner
+        do_cache: bool = False, # whether to return a cache of inducer states for upsampling
+        cache: list[Tensor] | None = None, # cache of inducer states for upsampling
+    ) -> tuple[Tensor, list[Tensor] | None]: # denoised, optional cache
         sigma = sigma.reshape(-1, *ones(x.ndim - 1))
 
         c_skip = self.sigma_data ** 2 / (sigma ** 2 + self.sigma_data ** 2)
@@ -48,6 +56,9 @@ class EDMPrecond(nn.Module):
             return denoised, cache
 
 class LogNormalSchedule(nn.Module):
+    '''
+    LogNormal noise schedule as proposed in "Elucidating the Design Space of Diffusion-Based Generative Models" by Kerras et al.
+    '''
     def __init__(self, sigma_max: float, mean=-1.2, std=1.2):
         super().__init__()
         
@@ -63,6 +74,9 @@ class LogNormalSchedule(nn.Module):
         return (rnd_normal * self.P_std + self.P_mean).exp()
         
 class LogUniformSchedule(nn.Module):
+    '''
+    LogUniform noise schedule which seems to work better in our (GECCO) context.
+    '''
     def __init__(self, max: float, min: float = 0.002, low_discrepancy: bool = True):
         super().__init__()
 
@@ -87,6 +101,10 @@ class LogUniformSchedule(nn.Module):
         return sigma.reshape(-1, *ones(data.ndim - 1))
 
 class EDMLoss(nn.Module):
+    '''
+    A loss function for training diffusion models. Implements the loss proposed in
+    "Elucidating the Design Space of Diffusion-Based Generative Models" by Kerras et al.
+    '''
     def __init__(self, schedule: nn.Module, sigma_data: float = 1.0, loss_scale: float = 100.0):
         super().__init__()
 
@@ -107,15 +125,30 @@ class EDMLoss(nn.Module):
         return loss.mean()
 
 class Conditioner(nn.Module):
+    '''
+    An abstract class for a conditioner. Conditioners are used to preprocess the context
+    before it is passed to the diffusion backbone.
+
+    NOT TO BE CONFUSED with preconditioning the diffusion model itself (done by EDMPrecond).
+    '''
     def forward(self, raw_context):
         raise NotImplementedError()
 
 class IdleConditioner(Conditioner):
+    '''
+    A placeholder conditioner that does nothing, for unconditional models.
+    '''
     def forward(self, raw_context: Context3d | None) -> None:
         del raw_context
         return None
 
 class Diffusion(pl.LightningModule):
+    '''
+    The main diffusion model. It consists of a backbone, a conditioner, a loss function
+    and a reparameterization scheme.
+
+    It derives from PyTorch Lightning's LightningModule, so it can be trained with PyTorch Lightning trainers.
+    '''
     def __init__(
         self,
         backbone: nn.Module,
@@ -130,6 +163,7 @@ class Diffusion(pl.LightningModule):
         self.loss = loss
         self.reparam = reparam
 
+        # set default sampler kwargs
         self.sampler_kwargs = dict(
             num_steps=64,
             sigma_min=0.002,
@@ -181,6 +215,9 @@ class Diffusion(pl.LightningModule):
         do_cache: bool = False,
         cache: Any | None = None,
     ) -> Tensor:
+        '''
+        Applies the denoising network to the given data, with the given noise level and context.
+        '''
         if post_context is None:
             post_context = self.conditioner(raw_context)
         return self.backbone(data, sigma, raw_context, post_context, do_cache, cache)
@@ -190,6 +227,9 @@ class Diffusion(pl.LightningModule):
         return next(self.parameters())
 
     def t_steps(self, num_steps: int, sigma_max: float, sigma_min: float, rho: float) -> Tensor:
+        '''
+        Returns an array of sampling time steps for the given parameters.
+        '''
         step_indices = torch.arange(num_steps, dtype=torch.float64, device=self.example_param.device)
         t_steps = (sigma_max ** (1 / rho) + step_indices / (num_steps - 1) * (sigma_min ** (1 / rho) - sigma_max ** (1 / rho))) ** rho
         t_steps = torch.cat([t_steps, torch.zeros_like(t_steps[:1])]) # t_N = 0
@@ -203,6 +243,10 @@ class Diffusion(pl.LightningModule):
         rng: torch.Generator = None,
         **kwargs,
     ) -> Tensor:
+        '''
+        A stochastic sampling function that samples from the diffusion model with the given context. Corresponds to 
+        the `SDE` sampler in the paper. The `ODE` sampler is not currently implemented in PyTorch.
+        '''
         kwargs = {**self.sampler_kwargs, **kwargs}
         num_steps = kwargs['num_steps']
         sigma_min = kwargs['sigma_min']
@@ -281,6 +325,18 @@ class Diffusion(pl.LightningModule):
         num_substeps=5,
         **kwargs,
     ):
+        '''
+        An upsampling function that upsamples the given data to the given number of new points.
+
+        Args:
+            `data` - the data to be upsampled
+            `new_latents` or `n_new` - either the specific latent variables to use for upsampling 
+                if the user wants to control them, or the number of new points to generate.
+            `context` - the context to condition the upsampling with
+        
+        Returns:
+            The newly sampled points.
+        '''
         kwargs = {**self.sampler_kwargs, **kwargs}
         num_steps = kwargs['num_steps']
         sigma_min = kwargs['sigma_min']
@@ -312,6 +368,9 @@ class Diffusion(pl.LightningModule):
         t_steps = self.t_steps(num_steps, sigma_max, sigma_min, rho)
 
         def call_net_cached(x: Tensor, t: Tensor, ctx: Context3d, cache: list[Tensor]):
+            '''
+            A helper function that calls the diffusion backbone with the given inputs and cache.
+            '''
             return self(
                 x.to(net_dtype),
                 t.to(net_dtype).expand(x.shape[0]),

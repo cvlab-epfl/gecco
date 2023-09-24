@@ -7,7 +7,7 @@ from gecco_torch.diffusion import EDMPrecond, Diffusion, IdleConditioner
 from gecco_torch.reparam import GaussianReparam
 from gecco_torch.diffusion import Diffusion, LogUniformSchedule, EDMLoss
 from gecco_torch.models.set_transformer import SetTransformer
-from gecco_torch.models.lift3d import LinearLift
+from gecco_torch.models.linear_lift import LinearLift
 from gecco_torch.models.activation import GaussianActivation
 from gecco_torch.data.shapenet_unc import ShapeNetUncondDataModule
 from gecco_torch.ema import EMACallback

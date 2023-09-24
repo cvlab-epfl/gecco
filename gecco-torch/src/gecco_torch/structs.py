@@ -1,10 +1,19 @@
-from typing import List, NamedTuple
-from dataclasses import dataclass, fields
+'''
+Classes defining the generation context (conditioning image and camera intrinsics matrix) and
+a training example (point cloud and context). Additional utils for pretty-printing etc.
+'''
+from typing import NamedTuple
 
 import torch
 from torch import Tensor
 
 def _raw_repr(obj) -> list[str]:
+    '''
+    A helper for implementing __repr__. It returns a list of lines which
+    describe the object. Works recursively for objects which have a _enumerate_fields.
+    The reason for returning a list of lines is to enable indented printing of
+    nested objects.
+    '''
     lines = []
     lines.append(f'{type(obj).__name__}(')
 
@@ -23,7 +32,10 @@ def _raw_repr(obj) -> list[str]:
     lines.append(f')')
     return lines
 
-def apply_to_tensors(obj, f: callable) -> object:
+def apply_to_tensors(obj: object, f: callable) -> object:
+    '''
+    Applies a function `f` to all tensors in the object. Works out-of-place
+    '''
     applied = {}
     for name, value in obj._enumerate_fields():
         if hasattr(value, 'apply_to_tensors'):
@@ -35,29 +47,6 @@ def apply_to_tensors(obj, f: callable) -> object:
     
     return type(obj)(**applied)
 
-@dataclass(repr=False)
-class TensorMixin:
-    def _enumerate_fields(self):
-        for field in fields(self):
-            yield field.name, getattr(self, field.name)
-
-    apply_to_tensors = apply_to_tensors
- 
-    def to(self, *args, **kwargs):
-        return self.apply_to_tensors(lambda t: t.to(*args, **kwargs))
-    
-    _raw_repr = _raw_repr
-
-    def __repr__(self) -> str:
-        return '\n'.join(self._raw_repr())
-    
-    @classmethod
-    def collate_fn(cls, batch):
-        return torch.utils.data._utils.collate.collate(
-            batch,
-            collate_fn_map={cls: cls.stack}
-        )
-    
 class DataError(RuntimeError):
     pass
 
@@ -65,6 +54,10 @@ def _named_tuple_enumerate_fields(obj: NamedTuple):
     yield from obj._asdict().items()
 
 class Context3d(NamedTuple):
+    '''
+    A class representing the context of a generation. It consists of a conditioning
+    image and a camera matrix. The camera intrisics matrix is 3x3.
+    '''
     image: Tensor
     K: Tensor
 
@@ -76,6 +69,9 @@ class Context3d(NamedTuple):
         return '\n'.join(self._raw_repr())
 
 class Example(NamedTuple):
+    '''
+    A class representing a training example. It consists of a point cloud and a context (possibly None).
+    '''
     data: Tensor
     ctx: Context3d | None
 

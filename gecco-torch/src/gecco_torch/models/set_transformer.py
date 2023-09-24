@@ -1,3 +1,7 @@
+'''
+Implements the Set Transformer from https://arxiv.org/abs/1810.00825 with
+some modifications to "inject" the diffusion noise level into the network.
+'''
 import torch
 import torch.nn.functional as F
 from torch import nn, Tensor
@@ -7,6 +11,10 @@ from gecco_torch.models.mlp import MLP
 from gecco_torch.models.normalization import AdaGN
 
 class AttentionPool(nn.Module):
+    '''
+    Uses attention to pool a set of features into a smaller set of features.
+    The queries are defined by the `inducers` learnable parameter.
+    '''
     def __init__(
         self,
         feature_dim: int,
@@ -54,6 +62,10 @@ class AttentionPool(nn.Module):
 
 
 class Broadcast(nn.Module):
+    '''
+    A module that implements a pool -> mlp -> unpool sequence to return an updated
+    version of the input tokens.
+    '''
     def __init__(
         self,
         feature_dim: int,
@@ -77,6 +89,13 @@ class Broadcast(nn.Module):
         return_h: bool = False,
         h: Tensor | None = None,
     ) -> tuple[Tensor, Tensor | None]:
+        '''
+        Args:
+            `x` - the input features
+            `t_embed` - the diffusion noise level
+            `return_h` - whether to return the inducer states for efficient point cloud upsampling
+            `h` - the inducer states if using cached values
+        '''
         if h is None:
             h = self.pool(x)
             h = self.norm_1(h, t_embed)
@@ -91,6 +110,10 @@ class Broadcast(nn.Module):
             return attn, None
         
 class BroadcastingLayer(nn.Module):
+    '''
+    A module equivalent to a standard transformer layer which uses a
+    broadcast -> mlp sequence, with skip connections in a pre-norm fashion.
+    '''
     def __init__(
         self,
         feature_dim: int,
@@ -134,6 +157,9 @@ class BroadcastingLayer(nn.Module):
         return x, h
 
 class SetTransformer(nn.Module):
+    '''
+    A set transformer is just a sequence of broadcasting layers.
+    '''
     def __init__(
         self,
         n_layers: int,
@@ -158,12 +184,9 @@ class SetTransformer(nn.Module):
         self,
         features: Tensor,
         t_embed: Tensor,
-        geometry: Tensor,
         return_h: bool = False,
         hs: list[Tensor] | None = None,
     ) -> tuple[Tensor, list[Tensor] | None]:
-        del geometry
-
         if hs is None:
             hs = [None] * len(self.layers)
 

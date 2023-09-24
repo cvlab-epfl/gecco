@@ -45,6 +45,11 @@ def plot_3d(clouds, colors=['blue', 'red', 'green'], shared_ax=False, images=Non
     return fig
 
 class PCVisCallback(pl.Callback):
+    '''
+    A callback which visualizes two things
+        1. The context images (only once)
+        2. The ground truth and sampled point clouds (once per validation phase)
+    '''
     def __init__(self, n: int = 8, n_steps: int = 64, point_size: int = 0.1):
         super().__init__()
         self.n = n
