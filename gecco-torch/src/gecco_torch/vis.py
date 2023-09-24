@@ -1,9 +1,10 @@
 from typing import Any
-from gecco.diffusion import Diffusion
-from gecco.structs import Example
+import torch
 import matplotlib.pyplot as plt
 import lightning.pytorch as pl
-import torch
+
+from gecco_torch.diffusion import Diffusion
+from gecco_torch.structs import Example
 
 def plot_3d(clouds, colors=['blue', 'red', 'green'], shared_ax=False, images=None):
     assert len(clouds) <= len(colors)

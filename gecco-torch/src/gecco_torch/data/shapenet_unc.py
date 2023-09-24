@@ -1,10 +1,10 @@
 import os
-from gecco.data.samplers import ConcatenatedSampler, FixedSampler
 import numpy as np
 import torch
 import lightning.pytorch as pl
 
-from gecco.structs import Example
+from gecco_torch.structs import Example
+from gecco_torch.data.samplers import ConcatenatedSampler, FixedSampler
 
 id_to_name = {
 '04379243': 'table',

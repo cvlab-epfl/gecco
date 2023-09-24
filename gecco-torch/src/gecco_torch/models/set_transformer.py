@@ -3,8 +3,8 @@ import torch.nn.functional as F
 from torch import nn, Tensor
 from einops import rearrange
 
-from gecco.models.mlp import MLP
-from gecco.models.normalization import AdaGN
+from gecco_torch.models.mlp import MLP
+from gecco_torch.models.normalization import AdaGN
 
 class AttentionPool(nn.Module):
     def __init__(

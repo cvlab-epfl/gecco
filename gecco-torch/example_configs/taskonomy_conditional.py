@@ -3,16 +3,16 @@ import os
 import torch
 import lightning.pytorch as pl
 
-from gecco.diffusion import EDMPrecond, Diffusion
-from gecco.reparam import UVLReparam
-from gecco.diffusion import Diffusion, LogUniformSchedule, EDMLoss
-from gecco.models.set_transformer import SetTransformer
-from gecco.models.feature_pyramid import ConvNeXtExtractor
-from gecco.models.ray import RayNetwork
-from gecco.models.activation import GaussianActivation
-from gecco.vis import PCVisCallback
-from gecco.data.taskonomy import TaskonomyDataModule
-from gecco.ema import EMACallback
+from gecco_torch.diffusion import EDMPrecond, Diffusion
+from gecco_torch.reparam import UVLReparam
+from gecco_torch.diffusion import Diffusion, LogUniformSchedule, EDMLoss
+from gecco_torch.models.set_transformer import SetTransformer
+from gecco_torch.models.feature_pyramid import ConvNeXtExtractor
+from gecco_torch.models.ray import RayNetwork
+from gecco_torch.models.activation import GaussianActivation
+from gecco_torch.vis import PCVisCallback
+from gecco_torch.data.taskonomy import TaskonomyDataModule
+from gecco_torch.ema import EMACallback
 
 dataset_path = '/cvlabdata1/cvlab/datasets_tyszkiew/taskonomy_256x256/'
 NUM_STEPS = 1_000_000

@@ -1,6 +1,5 @@
 import os
 import re
-from importlib import resources
 from typing import Tuple, List
 
 import torch
@@ -10,8 +9,8 @@ import lightning.pytorch as pl
 from tqdm.auto import tqdm
 import imageio as iio
 
-from gecco.structs import Context3d, Example
-from gecco.data.samplers import FixedSampler
+from gecco_torch.structs import Context3d, Example
+from gecco_torch.data.samplers import FixedSampler
 
 class Building:
     def __init__(
@@ -105,10 +104,7 @@ class Taskonomy(torch.utils.data.ConcatDataset):
         self.rgb_path = os.path.join(path, 'rgb')
         self.split = split
 
-        with resources.open_text(
-            'gecco.data',
-            'taskonomy_split.csv',
-        ) as split_file:
+        with open(os.path.join(path, 'taskonomy_split.csv')) as split_file:
             splits = parse_split_file(split_file)
         
         if split == 'all':

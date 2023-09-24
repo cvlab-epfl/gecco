@@ -1,6 +1,7 @@
 from typing import Any
-from gecco.models.set_transformer import SetTransformer
 from torch import nn, Tensor
+
+from gecco_torch.models.set_transformer import SetTransformer
 
 class LinearLift(nn.Module):
     def __init__(

@@ -1,12 +1,12 @@
 from einops import rearrange
-from gecco.structs import Context3d
 import torch
 from torch import nn, Tensor
 from kornia.geometry.camera.perspective import project_points
 
-from gecco.models.feature_pyramid import FeaturePyramidContext
-from gecco.models.set_transformer import SetTransformer
-from gecco.reparam import Reparam
+from gecco_torch.reparam import Reparam
+from gecco_torch.structs import Context3d
+from gecco_torch.models.feature_pyramid import FeaturePyramidContext
+from gecco_torch.models.set_transformer import SetTransformer
 
 class GroupNormBNC(nn.GroupNorm):
     def forward(self, tensor_bnc: Tensor) -> Tensor:

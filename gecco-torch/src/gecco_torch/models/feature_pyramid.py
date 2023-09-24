@@ -7,7 +7,7 @@ import torch
 from torch import nn, Tensor
 import torchvision.models as tvm
 
-from gecco.structs import Context3d
+from gecco_torch.structs import Context3d
 
 @dataclass
 class FeaturePyramidContext:

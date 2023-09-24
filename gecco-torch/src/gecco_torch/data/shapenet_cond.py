@@ -10,7 +10,7 @@ import multiprocess as mp
 import lightning.pytorch as pl
 from tqdm.auto import tqdm
 
-from gecco.structs import Example, Context3d
+from gecco_torch.structs import Example, Context3d
 
 IM_SIZE = 137 # 137 x 137 pixels
 WORLD_MAT_RE = re.compile(r'world_mat_(\d+)')

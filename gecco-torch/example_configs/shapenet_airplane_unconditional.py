@@ -3,15 +3,15 @@ import os
 import torch
 import lightning.pytorch as pl
 
-from gecco.diffusion import EDMPrecond, Diffusion, IdleConditioner
-from gecco.reparam import GaussianReparam
-from gecco.diffusion import Diffusion, LogUniformSchedule, EDMLoss
-from gecco.models.set_transformer import SetTransformer
-from gecco.models.lift3d import LinearLift
-from gecco.models.activation import GaussianActivation
-from gecco.data.shapenet_unc import ShapeNetUncondDataModule
-from gecco.ema import EMACallback
-from gecco.vis import PCVisCallback
+from gecco_torch.diffusion import EDMPrecond, Diffusion, IdleConditioner
+from gecco_torch.reparam import GaussianReparam
+from gecco_torch.diffusion import Diffusion, LogUniformSchedule, EDMLoss
+from gecco_torch.models.set_transformer import SetTransformer
+from gecco_torch.models.lift3d import LinearLift
+from gecco_torch.models.activation import GaussianActivation
+from gecco_torch.data.shapenet_unc import ShapeNetUncondDataModule
+from gecco_torch.ema import EMACallback
+from gecco_torch.vis import PCVisCallback
 
 dataset_path = '/cvlabdata2/cvlab/datasets_tyszkiewicz/point-flow-data/ShapeNetCore.v2.PC15k/'
 data = ShapeNetUncondDataModule(

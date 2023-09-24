@@ -1,10 +1,9 @@
 import os
 import torch
 import imageio as iio
-import numpy as np
 import h5py
 
-from gecco.structs import Example, Context3d
+from gecco_torch.structs import Example, Context3d
 
 class H5Scene:
     def __init__(

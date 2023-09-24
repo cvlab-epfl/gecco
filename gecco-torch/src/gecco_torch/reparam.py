@@ -2,7 +2,7 @@ import torch
 from torch import Tensor
 from kornia.geometry.camera.perspective import project_points, unproject_points
 
-from gecco.structs import Context3d
+from gecco_torch.structs import Context3d
 
 class Reparam(torch.nn.Module):
     def __init__(self, dim: int):

@@ -1,5 +1,6 @@
 from typing import List, NamedTuple
 from dataclasses import dataclass, fields
+
 import torch
 from torch import Tensor
 

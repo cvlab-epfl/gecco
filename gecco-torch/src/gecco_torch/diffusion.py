@@ -7,8 +7,8 @@ import lightning.pytorch as pl
 from torch import nn, Tensor
 from tqdm.auto import tqdm
 
-from gecco.reparam import Reparam, NoReparam
-from gecco.structs import Example, Context3d
+from gecco_torch.reparam import Reparam, NoReparam
+from gecco_torch.structs import Example, Context3d
 
 def ones(n: int):
     return (1, ) * n
