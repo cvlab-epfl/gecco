@@ -45,14 +45,14 @@ class GaussianReparam(Reparam):
         return f'mean={self.mean.flatten().tolist()}, sigma={self.sigma.flatten().tolist()}'
 
 class UVLReparam(Reparam):
-    def __init__(self, uvl_mean: Tensor, uvl_std: Tensor, logit_scale: float = 1.1):
-        assert uvl_mean.shape == (3, )
-        assert uvl_std.shape == (3, )
+    def __init__(self, mean: Tensor, sigma: Tensor, logit_scale: float = 1.1):
+        assert mean.shape == (3, )
+        assert sigma.shape == (3, )
 
         super().__init__(dim=3)
 
-        self.register_buffer('uvl_mean', uvl_mean)
-        self.register_buffer('uvl_std', uvl_std)
+        self.register_buffer('uvl_mean', mean)
+        self.register_buffer('uvl_std', sigma)
         self.logit_scale = logit_scale
     
     depth_to_real = staticmethod(torch.log)

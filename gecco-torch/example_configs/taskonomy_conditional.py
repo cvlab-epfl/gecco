@@ -25,8 +25,8 @@ print(f'num steps: {NUM_STEPS}, batch size: {BATCH_SIZE}, save_every: {SAVE_EVER
 # Reparametrization makes the point cloud more isotropic.
 # The values below are computed with the notebook in notebooks/compute_hyperparams.ipynb
 reparam = UVLReparam(
-    uvl_mean=torch.tensor([0.0, 0.0, 1.38]),
-    uvl_std=torch.tensor([0.56, 0.60, 0.49]),
+    mean=torch.tensor([0.0, 0.0, 1.38]),
+    sigma=torch.tensor([0.56, 0.60, 0.49]),
 )
 
 # Set up the network. RayNetwork is responsible for augmenting cloud features with local

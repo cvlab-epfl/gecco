@@ -39,3 +39,9 @@ samples = model.sample_stochastic(
     with_pbar=True, # shows a tqdm progress bar for sampling
 )
 ```
+
+### Known issues
+1. This code does not implement all features of the JAX version:
+    * No ODE sampler
+    * No log-likelihood computation
+2. Training in 16bit precision eventually diverges. It is much faster (4-8x) than full 32bit precision so until the issue is addressed, I suggest training in 16bit until divergence and then resuming in 32 bit precision.
