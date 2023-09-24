@@ -6,6 +6,7 @@ import equinox as eqx
 from gecco_jax.models.mlp import MLP
 from gecco_jax.models.set_transformer import AttentionPool
 
+
 def _replace_weights(pytree, filter_fn, attr_getter, replace_fn):
     def get_leaves(pytree):
         is_leaf = lambda x: filter_fn(x) and x is not pytree
@@ -18,12 +19,16 @@ def _replace_weights(pytree, filter_fn, attr_getter, replace_fn):
             out.extend(get_leaves(x))
         return out
 
-    return eqx.tree_at(get_leaves, pytree, replace_fn=replace_fn, is_leaf=lambda x: x is None)
+    return eqx.tree_at(
+        get_leaves, pytree, replace_fn=replace_fn, is_leaf=lambda x: x is None
+    )
+
 
 def _bias_init(bias):
-    if bias is None or (bias == 1.).all():
+    if bias is None or (bias == 1.0).all():
         return bias
     return jnp.zeros_like(bias)
+
 
 def gpt_init(model):
     bb = model.network.backbone
@@ -44,7 +49,7 @@ def gpt_init(model):
         lambda mlp: mlp.layers[-1].weight,
         lambda mlp_weight: mlp_weight / math.sqrt(2 * n_layers),
     )
-    
+
     # scale down attention output projections by sqrt(2 * n_layers)
     bb = _replace_weights(
         bb,
@@ -52,5 +57,5 @@ def gpt_init(model):
         lambda attn: attn.output_proj.weight,
         lambda out_weight: out_weight / math.sqrt(2 * n_layers),
     )
-    
+
     return eqx.tree_at(lambda m: m.network.backbone, model, replace_fn=lambda _: bb)

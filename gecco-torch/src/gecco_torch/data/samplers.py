@@ -3,6 +3,7 @@ import torch
 from torch import Tensor
 from torch.utils.data import Dataset
 
+
 @dataclass
 class ConcatenatedSampler:
     data_length: int
@@ -35,6 +36,7 @@ class ConcatenatedSampler:
             yield from permutation[:left_to_yield].tolist()
             yielded += permutation.shape[0]
 
+
 @dataclass
 class FixedSampler:
     permutation: Tensor
@@ -48,10 +50,10 @@ class FixedSampler:
         if length is None:
             length = len(dataset)
         if length > len(dataset):
-            raise ValueError(f'{length=} is more than {len(dataset)=}.')
+            raise ValueError(f"{length=} is more than {len(dataset)=}.")
 
         rng: torch.Generator = torch.Generator().manual_seed(seed)
-        perm = torch.randperm(len(dataset), generator=rng) 
+        perm = torch.randperm(len(dataset), generator=rng)
         self.permutation = perm[:length]
 
     def __len__(self):

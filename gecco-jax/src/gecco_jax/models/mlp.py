@@ -8,8 +8,10 @@ import equinox as eqx
 from equinox import nn
 from equinox._module import static_field
 
+
 def _identity(x):
     return x
+
 
 class MLP(eqx.Module):
     """Standard Multi-Layer Perceptron; also known as a feed-forward network."""
@@ -34,7 +36,7 @@ class MLP(eqx.Module):
         final_activation: Callable = _identity,
         *,
         key: "jax.random.PRNGKey",
-        **kwargs
+        **kwargs,
     ):
         """**Arguments**:
 
@@ -70,7 +72,9 @@ class MLP(eqx.Module):
         self.final_activation = final_activation
 
     def __call__(
-        self, x: jax.Array, key: Optional["jax.random.PRNGKey"],
+        self,
+        x: jax.Array,
+        key: Optional["jax.random.PRNGKey"],
     ) -> jax.Array:
         """**Arguments:**
 
@@ -90,9 +94,9 @@ class MLP(eqx.Module):
         x = self.layers[-1](x)
         x = self.final_activation(x)
         return x
-    
+
     def vmap_with_key(self, x, key):
         if key is not None:
             key = jax.random.split(key, x.shape[0])
-        
+
         return jax.vmap(self)(x, key)

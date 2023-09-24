@@ -5,14 +5,15 @@ from torch.utils.tensorboard import SummaryWriter
 
 from gecco_jax.models.diffusion import Diffusion, SampleDetails
 
-CMAP = plt.get_cmap('viridis')
+CMAP = plt.get_cmap("viridis")
+
 
 def make_unconditional_sample_callback(
     geom_dim: int = 3,
     n_samples: int = 8,
     n_points: int = 128,
     point_size: float = 0.1,
-    key = jax.random.PRNGKey(42),
+    key=jax.random.PRNGKey(42),
 ):
     def callback(
         model: Diffusion,
@@ -31,20 +32,22 @@ def make_unconditional_sample_callback(
         latent = np.asarray(samples.latent)
 
         latent_r = np.linalg.norm(latent, axis=-1)
-        r_normalized = 1.0 - np.clip(latent_r / (2 * model.schedule.sigma_max), 0., 1.)
-        colors = CMAP(r_normalized,  bytes=True)[..., :3] # clip away the alpha channel
+        r_normalized = 1.0 - np.clip(
+            latent_r / (2 * model.schedule.sigma_max), 0.0, 1.0
+        )
+        colors = CMAP(r_normalized, bytes=True)[..., :3]  # clip away the alpha channel
 
         logger.add_mesh(
-            tag='samples',
+            tag="samples",
             vertices=points,
             colors=colors,
             global_step=epoch,
             config_dict={
-                'material': {
-                    'cls': 'PointsMaterial',
-                    'size': point_size,
+                "material": {
+                    "cls": "PointsMaterial",
+                    "size": point_size,
                 },
             },
         )
-    
+
     return callback

@@ -13,10 +13,12 @@ from gecco_torch.data.shapenet_unc import ShapeNetUncondDataModule
 from gecco_torch.ema import EMACallback
 from gecco_torch.vis import PCVisCallback
 
-dataset_path = '/cvlabdata2/cvlab/datasets_tyszkiewicz/point-flow-data/ShapeNetCore.v2.PC15k/'
+dataset_path = (
+    "/cvlabdata2/cvlab/datasets_tyszkiewicz/point-flow-data/ShapeNetCore.v2.PC15k/"
+)
 data = ShapeNetUncondDataModule(
     dataset_path,
-    category='airplane',
+    category="airplane",
     epoch_size=5_000,
     batch_size=48,
     num_workers=16,
@@ -53,6 +55,7 @@ model = Diffusion(
     ),
 )
 
+
 def trainer():
     return pl.Trainer(
         default_root_dir=os.path.split(__file__)[0],
@@ -60,19 +63,20 @@ def trainer():
             EMACallback(decay=0.99),
             pl.callbacks.ModelCheckpoint(),
             pl.callbacks.ModelCheckpoint(
-                monitor='val_loss',
-                filename='{epoch}-{val_loss:.3f}',
+                monitor="val_loss",
+                filename="{epoch}-{val_loss:.3f}",
                 save_top_k=1,
-                mode='min',
+                mode="min",
             ),
             PCVisCallback(n=8, n_steps=128, point_size=0.01),
         ],
         max_epochs=50,
-        precision='16-mixed',
+        precision="16-mixed",
         gradient_clip_val=1.0,
-        gradient_clip_algorithm='value',
+        gradient_clip_algorithm="value",
     )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     model = torch.compile(model)
     trainer().fit(model, data)

@@ -12,6 +12,7 @@ import imageio as iio
 from gecco_torch.structs import Context3d, Example
 from gecco_torch.data.samplers import FixedSampler
 
+
 class Building:
     def __init__(
         self,
@@ -21,36 +22,39 @@ class Building:
         n_points: int = 2048,
     ):
         self.name = name
-        self.h5_path = os.path.join(h5_path, f'{name}.h5')
+        self.h5_path = os.path.join(h5_path, f"{name}.h5")
         self.rgb_path = os.path.join(rgb_path, name)
         self.n_points = n_points
-    
-        with h5py.File(self.h5_path, 'r') as h5_file:
-            points = h5_file['point'][()]
-            views = h5_file['view'][()]
-        
+
+        with h5py.File(self.h5_path, "r") as h5_file:
+            points = h5_file["point"][()]
+            views = h5_file["view"][()]
+
         self.points_and_views = list(zip(points.tolist(), views.tolist()))
         missing_points_and_views = self.missing_points_and_views()
-        is_available = ~np.array([(pv in missing_points_and_views) for pv in self.points_and_views])
+        is_available = ~np.array(
+            [(pv in missing_points_and_views) for pv in self.points_and_views]
+        )
         indices = np.arange(len(self.points_and_views))
         self.reindex = indices[is_available]
 
     def rgb_file_path(self, index, name_only: bool = False) -> str:
         point, view = self.points_and_views[index]
-        fname = f'{self.name}_{point}_{view}.jpg'
+        fname = f"{self.name}_{point}_{view}.jpg"
         if name_only:
             return fname
         return os.path.join(self.rgb_path, fname)
-    
+
     def missing_points_and_views(self) -> List[Tuple[int, int]]:
         existing_files = frozenset(os.listdir(self.rgb_path))
         requested_files = frozenset(
-            self.rgb_file_path(i, name_only=True) for i in range(len(self.points_and_views))
+            self.rgb_file_path(i, name_only=True)
+            for i in range(len(self.points_and_views))
         )
-        
+
         missing_files = requested_files - existing_files
-        
-        fname_re = re.compile(r'\w+_(\d+)_(\d+)\.jpg')
+
+        fname_re = re.compile(r"\w+_(\d+)_(\d+)\.jpg")
         missing_points_and_views = set()
         for missing_file in missing_files:
             if (m := fname_re.match(missing_file)) is None:
@@ -60,22 +64,22 @@ class Building:
             missing_points_and_views.add((point, view))
 
         return missing_points_and_views
-    
+
     def __len__(self):
         return len(self.reindex)
-    
+
     def __getitem__(self, index):
         index = self.reindex[index]
 
-        with h5py.File(self.h5_path, 'r') as h5_file:
-            pc = h5_file['pc'][index]
-            K = h5_file['k'][index]
+        with h5py.File(self.h5_path, "r") as h5_file:
+            pc = h5_file["pc"][index]
+            K = h5_file["k"][index]
 
         image_path = self.rgb_file_path(index)
         image = np.asarray(iio.imread(image_path))
         image = image.astype(np.float32).transpose(2, 0, 1) / 255
 
-        perm = np.random.permutation(pc.shape[0])[:self.n_points]
+        perm = np.random.permutation(pc.shape[0])[: self.n_points]
         pc = pc[perm]
 
         return Example(
@@ -86,46 +90,51 @@ class Building:
             ),
         )
 
+
 def parse_split_file(split_file):
     splits = {}
-    for line in list(split_file)[1:]: # skip header
-        name, is_train, is_val, is_test = line.split(',')
+    for line in list(split_file)[1:]:  # skip header
+        name, is_train, is_val, is_test = line.split(",")
         if int(is_train):
-            splits[name] = 'train'
+            splits[name] = "train"
         if int(is_val):
-            splits[name] = 'val'
+            splits[name] = "val"
         if int(is_test):
-            splits[name] = 'test'
+            splits[name] = "test"
     return splits
 
+
 class Taskonomy(torch.utils.data.ConcatDataset):
-    def __init__(self, path: str, split: str = 'all', n_points: int = 2048):
-        self.h5_path = os.path.join(path, 'point_clouds')
-        self.rgb_path = os.path.join(path, 'rgb')
+    def __init__(self, path: str, split: str = "all", n_points: int = 2048):
+        self.h5_path = os.path.join(path, "point_clouds")
+        self.rgb_path = os.path.join(path, "rgb")
         self.split = split
 
-        with open(os.path.join(path, 'taskonomy_split.csv')) as split_file:
+        with open(os.path.join(path, "taskonomy_split.csv")) as split_file:
             splits = parse_split_file(split_file)
-        
-        if split == 'all':
+
+        if split == "all":
             belongs_in_split = lambda _name: True
         else:
             belongs_in_split = lambda name: splits[name] == split
 
         buildings = []
         for file in tqdm(os.listdir(self.h5_path)):
-            name = file[:-len('.h5')]
+            name = file[: -len(".h5")]
 
             if not belongs_in_split(name):
                 continue
 
-            buildings.append(Building(name, self.h5_path, self.rgb_path, n_points=n_points))
-            
+            buildings.append(
+                Building(name, self.h5_path, self.rgb_path, n_points=n_points)
+            )
+
         super().__init__(buildings)
-    
+
     def __repr__(self):
-        return f'Taskonomy(split={self.split}, n_buildings={len(self.datasets)}, len={len(self)})'
-    
+        return f"Taskonomy(split={self.split}, n_buildings={len(self.datasets)}, len={len(self)})"
+
+
 class TaskonomyDataModule(pl.LightningDataModule):
     def __init__(
         self,
@@ -144,16 +153,16 @@ class TaskonomyDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.epoch_size = epoch_size
         self.val_size = val_size
-    
-    def setup(self, stage='fit'):
-        if stage == 'fit':
-            self.train = Taskonomy(self.root, 'train', self.n_points)
-            self.val = Taskonomy(self.root, 'val', self.n_points)
-        elif stage == 'test':
-            self.test = Taskonomy(self.root, 'test', self.n_points)
+
+    def setup(self, stage="fit"):
+        if stage == "fit":
+            self.train = Taskonomy(self.root, "train", self.n_points)
+            self.val = Taskonomy(self.root, "val", self.n_points)
+        elif stage == "test":
+            self.test = Taskonomy(self.root, "test", self.n_points)
         else:
-            raise ValueError(f'Unknown stage {stage}')
-        
+            raise ValueError(f"Unknown stage {stage}")
+
     def train_dataloader(self):
         if self.epoch_size is None:
             kw = dict(
@@ -164,7 +173,9 @@ class TaskonomyDataModule(pl.LightningDataModule):
         else:
             kw = dict(
                 shuffle=False,
-                sampler=torch.utils.data.RandomSampler(self.train, replacement=True, num_samples=self.epoch_size),
+                sampler=torch.utils.data.RandomSampler(
+                    self.train, replacement=True, num_samples=self.epoch_size
+                ),
                 batch_size=self.batch_size,
             )
         return torch.utils.data.DataLoader(
@@ -172,7 +183,7 @@ class TaskonomyDataModule(pl.LightningDataModule):
             num_workers=self.num_workers,
             **kw,
         )
-    
+
     def val_dataloader(self):
         if self.val_size is None:
             sampler = None
@@ -185,7 +196,7 @@ class TaskonomyDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             sampler=sampler,
         )
-    
+
     def test_dataloader(self):
         return torch.utils.data.DataLoader(
             self.test,

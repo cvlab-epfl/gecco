@@ -5,6 +5,7 @@ import torch
 from torch.utils.data import DataLoader
 from torch_dimcheck import A
 
+
 @dataclass
 class ConcatenatedSampler:
     data_length: int
@@ -34,9 +35,10 @@ class ConcatenatedSampler:
             yield from permutation[:left_to_yield]
             yielded += permutation.shape[0]
 
+
 @dataclass
 class FixedSampler:
-    permutation: A['N']
+    permutation: A["N"]
 
     def __init__(
         self,
@@ -47,10 +49,10 @@ class FixedSampler:
         if length is None:
             length = len(dataset)
         if length > len(dataset):
-            raise ValueError(f'{length=} is more than {len(dataset)=}.')
+            raise ValueError(f"{length=} is more than {len(dataset)=}.")
 
         rng: torch.Generator = torch.Generator().manual_seed(seed)
-        perm = torch.randperm(len(dataset), generator=rng) 
+        perm = torch.randperm(len(dataset), generator=rng)
         self.permutation = perm[:length].numpy()
 
     def __len__(self):
@@ -58,6 +60,7 @@ class FixedSampler:
 
     def __iter__(self):
         yield from self.permutation
+
 
 def dataloader(
     dataset,
@@ -70,27 +73,27 @@ def dataloader(
 ):
     if sequential_sampler and not fixed_sampler:
         raise AssertionError()
-    
+
     if fixed_sampler:
         if sequential_sampler:
-            sampler = 'sequential'
+            sampler = "sequential"
         else:
-            sampler = 'fixed_perm'
+            sampler = "fixed_perm"
     else:
-        sampler = 'concatenated'
+        sampler = "concatenated"
 
     length = None if num_steps is None else batch_size * num_steps
-    if sampler == 'fixed_perm':
+    if sampler == "fixed_perm":
         kw = dict(
             sampler=FixedSampler(dataset, length=length),
             drop_last=False if drop_last is None else drop_last,
         )
-    elif sampler == 'sequential':
+    elif sampler == "sequential":
         kw = dict(
             shuffle=False,
             drop_last=False if drop_last is None else drop_last,
         )
-    elif sampler == 'concatenated':
+    elif sampler == "concatenated":
         kw = dict(
             sampler=ConcatenatedSampler(dataset, length=length),
             drop_last=True if drop_last is None else drop_last,
