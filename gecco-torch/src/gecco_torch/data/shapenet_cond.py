@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Callable, NamedTuple, Optional, Union, List, Any
+from typing import NamedTuple, Union, List
 from functools import partial
 
 import torch
@@ -15,16 +15,6 @@ from gecco_torch.structs import Example, Context3d
 IM_SIZE = 137  # 137 x 137 pixels
 WORLD_MAT_RE = re.compile(r"world_mat_(\d+)")
 CAMERA_MAT_RE = re.compile(r"camera_mat_(\d+)")
-FIX_MASK_RE = re.compile(r"mask_(\d+)")
-
-
-class TestData(NamedTuple):
-    points_raw: np.ndarray
-    scale: np.ndarray
-    loc: np.ndarray
-    wmat: np.ndarray
-    category: List[str]
-    object_id: List[str]
 
 
 class ShapeNetVolModel:
@@ -32,9 +22,11 @@ class ShapeNetVolModel:
         self,
         root: str,
         n_points: int = 2048,
+        single_view: bool = False,
     ):
         self.root = root
         self.n_points = n_points
+        self.single_view = single_view
 
         self.wmats, self.cmats = None, None
 
@@ -91,7 +83,10 @@ class ShapeNetVolModel:
         return points * scale + loc[None, :]
 
     def __len__(self):
-        return 24
+        if self.single_view:
+            return 1
+        else:
+            return 24
 
     def __getitem__(self, index) -> Example:
         wmat, cmat = self.get_camera_params(index)
@@ -145,9 +140,6 @@ class ShapeNetVolClass(torch.utils.data.ConcatDataset):
         self.split = split
 
 
-identity = lambda e: e
-
-
 class ShapeNetVol(torch.utils.data.ConcatDataset):
     def __init__(
         self,
@@ -193,12 +185,14 @@ class ShapenetCondDataModule(pl.LightningDataModule):
         self.epoch_size = epoch_size
         self.val_size = val_size
 
-    def setup(self, stage: str = 'fit'):
-        if stage == 'fit':
-            self.train = ShapeNetVol(self.root, "train")
-            self.val = ShapeNetVol(self.root, "val")
-        elif stage == 'test':
-            self.test = ShapeNetVol(self.root, "test")
+    def setup(self, stage: str = "fit"):
+        kw = dict(n_points=self.n_points)
+        if stage == "fit":
+            self.train = ShapeNetVol(self.root, "train", **kw)
+            self.val = ShapeNetVol(self.root, "val", **kw)
+        elif stage == "test":
+            kw["single_view"] = True
+            self.test = ShapeNetVol(self.root, "test", **kw)
 
     def train_dataloader(self):
         if self.epoch_size is None:
