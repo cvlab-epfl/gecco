@@ -2,7 +2,6 @@
 
 This is the official code release for the paper [GECCO: Geometrically-Conditioned Point Diffusion Models](https://arxiv.org/abs/2303.05916). It contains two implementations: using JAX and PyTorch. The experiments described in the paper were carried out with a JAX codebase. Unfortunately the JAX ecosystem is in a state of constant flux, meaning the package will only work with specific dependency versions, making it difficult to use for future work. For the convenience of the community we also provide a PyTorch reimplementation, as a starting point for future work. In short: if you want to reproduce the numbers (possibly on a different dataset): use JAX. If you want to modify/extend this work - use PyTorch.
 
-|:-:|:----:|
 |[![Read the paper on arXiv](https://img.shields.io/badge/arXiv-2303.05916-f9f107.svg)](https://arxiv.org/abs/2303.05916) | Read the paper on arXiv |
 |[![Play with ShapeNet in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oOhKIElzU5Db5-JwJoXVI3WblHmAKdE8?usp=sharing)  | Play with GECCO trained on ShapeNet|
 |[![Play with Taskonomy in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/12D_-OIzsthRMlil63JI_LXTyvdEN4OoJ?usp=sharing) | Play with GECCO trained on Taskonomy|
