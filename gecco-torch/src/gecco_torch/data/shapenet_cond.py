@@ -193,9 +193,12 @@ class ShapenetCondDataModule(pl.LightningDataModule):
         self.epoch_size = epoch_size
         self.val_size = val_size
 
-    def setup(self, stage: Optional[str] = None):
-        self.train = ShapeNetVol(self.root, "train")
-        self.val = ShapeNetVol(self.root, "val")
+    def setup(self, stage: str = 'fit'):
+        if stage == 'fit':
+            self.train = ShapeNetVol(self.root, "train")
+            self.val = ShapeNetVol(self.root, "val")
+        elif stage == 'test':
+            self.test = ShapeNetVol(self.root, "test")
 
     def train_dataloader(self):
         if self.epoch_size is None:
@@ -231,6 +234,15 @@ class ShapenetCondDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             sampler=sampler,
+            pin_memory=True,
+            shuffle=False,
+        )
+
+    def test_dataloader(self):
+        return torch.utils.data.DataLoader(
+            self.test,
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
             pin_memory=True,
             shuffle=False,
         )
