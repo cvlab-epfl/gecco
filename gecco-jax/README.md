@@ -5,6 +5,9 @@ This is the official JAX implementation of the paper [GECCO: Geometrically-Condi
 ### Installation
 This package can be installed with `pip` via `pip install path/to/this/repository` and used as `import gecco_jax`. Use `pip install -e path/to/this/repository` if you want your changes in this repository to be immediately reflected in import locations, otherwise you need to re-install the package after each modification.
 
+### Pretrained checkpoints
+We provide pretrained checkpoints for both PyTorch and JAX [here](https://datasets.epfl.ch/gecco-weights/index.html).
+
 ### Configuration
 We find that with machine learning research projects a lot of time is spent updating a sophisticated configuration parser to cover all the functionality, much of which is soon to be abandoned as soon as the experiment is found to bring no improvements. Instead, this project simply uses `.py` files for configuration with the assumption that they define a `model` object and start training when executed. Please see `example_configs/{shapenet_airplane_unconditional.py,taskonomy_conditional.py}` for extensively commented examples.
 
@@ -12,7 +15,7 @@ We find that with machine learning research projects a lot of time is spent upda
 See the top level README in this repository.
 
 ### Training
-TODO
+Please adjust the data directory of example configs (see "pretrained checkpoints" above) and execute `python gecco_jax.train path/to/config/file.py`.
 
 ### Inference
 To prepare your model for inference, you should
@@ -20,6 +23,4 @@ To prepare your model for inference, you should
 2. Load model weights (be careful to use the exponential moving average weights, not the "regular" ones)
 3. Use sampling methods on the model object
 
-Since the config files may be in various places outside of this directory, we provide a utility called `gecco.load_config` to load the config files by path (instead of the standard import system). Your usecases should be mostly covered by the notebooks in `notebooks/` but we present a minimal example below:
-
-TODO
+Since the config files may be in various places outside of this directory, we provide a utility called `gecco.load_config` to load the config files by path (instead of the standard import system). Your usecases should be mostly covered by the notebooks in `notebooks/`.

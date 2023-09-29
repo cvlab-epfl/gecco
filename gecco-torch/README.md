@@ -5,6 +5,11 @@ This is the official PyTorch reimplementation of the paper [GECCO: Geometrically
 ### Installation
 This package can be installed with `pip` via `pip install path/to/this/repository` and used as `import gecco_torch`. Use `pip install -e path/to/this/repository` if you want your changes in this repository to be immediately reflected in import locations, otherwise you need to re-install the package after each modification.
 
+### Pretrained checkpoints
+We provide pretrained checkpoints for both PyTorch and JAX [here](https://datasets.epfl.ch/gecco-weights/index.html).
+
+> Note: due to insufficiently long training, the PyTorch checkpoints currently lag in performance between the JAX ones. They are still fine for qualitative evaluation and future work.
+
 ### Configuration
 We find that with machine learning research projects a lot of time is spent updating a sophisticated configuration parser to cover all the functionality, much of which is soon to be abandoned as soon as the experiment is found to bring no improvements. Instead, this project simply uses `.py` files for configuration with the assumption that they define a `model` object and start training when executed. Please see `example_configs/{shapenet_airplane_unconditional.py,taskonomy_conditional.py}` for extensively commented examples.
 
@@ -44,4 +49,6 @@ samples = model.sample_stochastic(
 1. This code does not implement all features of the JAX version:
     * No ODE sampler
     * No log-likelihood computation
+    * No validation on benchmarks like the JAX codebase does
 2. Training in 16bit precision eventually diverges. It is much faster (4-8x) than full 32bit precision so until the issue is addressed, I suggest training in 16bit until divergence and then resuming in 32 bit precision.
+    * As a result the PyTorch checkpoints are under-trained. We will release improved versions soon.

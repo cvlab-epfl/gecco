@@ -1,0 +1,32 @@
+#!/bin/bash
+
+#SCENES=("ackermanville" "adairsville" "adrian" "airport" "akiak" "albertville" "aldine" "aldrich" "alfred" "allensville" "almena" "almota" "aloha" "alstown" "american" "anaheim" "ancor" "andover" "angiola" "annawan" "annona" "anthoston" "apache" "applewold" "arbutus" "archer" "arkansaw" "arona" "artois" "ashport" "assinippi" "athens" "auburn" "aulander" "avonia" "azusa" "badger" "ballantine" "ballou" "baneberry" "barahona" "barboursville" "barranquitas" "bautista" "beach" "beechwood" "bellemeade" "bellwood" "belpre" "benevolence" "benicia" "bertram" "bethlehem" "bettendorf" "biltmore" "blackstone" "blenheim" "bohemia" "bolton" "bonesteel" "bonfield" "bonnie" "booth" "bountiful" "bowlus" "bowmore" "branford" "braxton" "bremerton" "brentsville" "brevort" "brewton" "broadwell" "broseley" "browntown" "burien" "byers" "cabin" "calavo" "callicoon" "calmar" "cantwell" "capistrano" "carneiro" "carpendale" "carpio" "caruthers" "cashel" "cason" "castor" "castroville" "cauthron" "cayuse" "cebolla" "channel" "checotah" "chesterbrook" "chilhowie" "chiloquin" "chireno" "chrisney" "churchton" "circleville" "cisne" "clairton" "clarkridge" "clive" "cobalt" "cochranton" "codell" "coeburn" "coffeen" "cohoes" "cokeville" "colebrook" "collierville" "connellsville" "convoy" "cooperstown" "copemish" "corder" "cornville" "corozal" "cosmos" "cottonport" "country" "cousins" "crandon" "creede" "crookston" "culbertson" "cullison" "cutlerville" "dalcour" "dansville" "darden" "darrtown" "dauberville" "deatsville" "dedham" "deemston" "delton" "denmark" "destin" "divide" "donaldson" "dryville" "duarte" "dunmor" "eagan" "eagerville" "eastville" "edgemere" "edson" "ellaville" "elmira" "elton" "emmaus" "espanola" "eudora" "euharlee" "everton" "ewansville" "ewell" "experiment" "fishersville" "fitchburg" "fleming" "fonda" "forkland" "foyil" "frankfort" "fredericksburg" "freedom" "frierson" "frontenac" "funkstown" "galatia" "gasburg" "gastonia" "gaylord" "german" "germfask" "gilbert" "gladstone" "glassboro" "glenmoor" "globe" "gloria" "gluck" "gluek" "goffs" "goodfield" "goodview" "goodwine" "goodyear" "gough" "graceville" "grangeville" "grantsville" "grassy" "gratz" "gravelly" "greigsville" "grigston" "haaswood" "hacienda" "hainesburg" "halfway" "hallettsville" "hambleton" "hammon" "hanson" "harrellsville" "hartline" "hatfield" "haxtun" "haymarket" "helix" "helton" "hendrix" "hercules" "herricks" "highspire" "hildebran" "hillsdale" "hitchland" "hiteman" "hobson" "holcut" "hometown" "hominy" "hordville" "hornsby" "hortense" "howie" "hurley" "idanha" "ihlen" "imbery" "inkom" "irvine" "islandton" "jacobus" "jenners" "jennie" "kangley" "kankakee" "kathryn" "keiser" "kemblesville" "kendall" "kerrtown" "kettle" "kevin" "kihei" "kildare" "kinde" "kingdom" "kingfisher" "kinney" "kirksville" "kirwin" "klickitat" "kobuk" "kopperl" "kremlin" "kronborg" "ladue" "lajas" "lakeville" "landing" "lathrup" "laupahoehoe" "laytonsville" "leavittsburg" "leilani" "lenoir" "leonardo" "lessley" "liddieville" "lindberg" "lindenwood" "lindsborg" "lineville" "lluveras" "losantville" "lovilia" "lucan" "ludlowville" "lynchburg" "lynxville" "maben" "macarthur" "macedon" "macksville" "macland" "maguayo" "mahtomedi" "maida" "maiden" "mammoth" "manassas" "maricopa" "markleeville" "marksville" "marland" "marstons" "martinville" "maryhill" "mashulaville" "matoaca" "maugansville" "maunawili" "mayesville" "mazomanie" "mccloud" "mcclure" "mcdade" "mcewen" "mckeesport" "mcnary" "melstone" "mentasta" "mentmore" "merchantville" "merlin" "merom" "mesic" "micanopy" "michiana" "mifflinburg" "mifflintown" "milaca" "milford" "millbury" "moberly" "mobridge" "model" "mogadore" "mogote" "monson" "monticello" "montreal" "morris" "mosinee" "muleshoe" "mullica" "munsons" "murchison" "musicks" "natural" "neibert" "nemacolin" "neshkoro" "newcomb" "newfields" "nicut" "nimmons" "noonday" "northgate" "norvelt" "noxapater" "nuevo" "ogilvie" "ohoopee" "okabena" "onaga" "ooltewah" "orangeburg" "orason" "oriole" "ossipee" "ovalo" "oyens" "pablo" "paige" "pamelia" "parole" "pasatiempo" "peacock" "pearce" "peconic" "peden" "pettigrew" "pinesdale" "pittsburg" "placida" "pleasant" "plessis" "plumerville" "pocasset" "pocopson" "poipu" "pomaria" "portal" "portola" "potosi" "potterville" "poyen" "purple" "quantico" "rabbit" "ranchester" "rancocas" "random" "readsboro" "redbank" "reserve" "retsof" "reyno" "ribera" "roane" "rockport" "roeville" "rogue" "rosenberg" "rosser" "roxboro" "ruckersville" "rutherford" "sagerton" "samuels" "sanctuary" "sands" "sarcoxie" "sasakwa" "sawpit" "scandinavia" "schoolcraft" "scioto" "seatonville" "seeley" "seiling" "seward" "shauck" "shelbiana" "shelbyville" "shellsburg" "shingler" "shumway" "silas" "silerton" "silva" "siren" "sisters" "smoketown" "sodaville" "soldier" "sontag" "southfield" "spencerville" "spotswood" "spread" "springerville" "springhill" "stanleyville" "starks" "stilwell" "stockman" "stockwell" "stokes" "sugarville" "sumas" "sundown" "sunshine" "superior" "sussex" "sweatman" "swisshome" "swormville" "tallmadge" "tariffville" "terrell" "texasville" "thrall" "tilghmanton" "timberon" "tippecanoe" "tokeland" "tolstoy" "tomales" "torrington" "touhy" "tradewinds" "trail" "tyler" "tysons" "umpqua" "uncertain" "uvalda" "vacherie" "vails" "victorville" "voorhees" "waimea" "wainscott" "waipahu" "wakeman" "waldenburg" "wando" "wappingers" "warrenville" "wattsville" "waucousta" "waukeenah" "weleetka" "wells" "wesley" "westerville" "westfield" "whiteriver" "whitethorn" "wilbraham" "wilkesboro" "wilkinsburg" "willow" "wilseyville" "windhorst" "winfield" "winooski" "winthrop" "woodbine" "woonsocket" "wyatt" "wyldwood" "yadkinville" "yankeetown" "yscloskey")
+
+URL="https://datasets.epfl.ch/gecco-taskonomy-dataset"
+ROOT="taskonomy-gecco"
+
+mkdir $ROOT
+mkdir $ROOT/point_clouds
+mkdir $ROOT/rgb
+
+wget -P $ROOT $URL/README.txt/README.txt
+wget -P $ROOT $URL/LICENSE.txt/LICENSE.txt
+wget -P $ROOT $URL/checksums.md5/checksums.md5
+wget -P $ROOT $URL/taskonomy_split.csv/taskonomy_split.csv
+
+TOTAL_SCENES=${#SCENES[@]}
+DOWNLOADED=0
+
+for SCENE in ${SCENES[@]}; do
+	TAR_FILE=rgb/$SCENE.tar;
+	wget -P $ROOT/rgb $URL/$TAR_FILE;
+	tar -xf $ROOT/$TAR_FILE -C $ROOT/rgb;
+	rm $ROOT/$TAR_FILE;
+	wget -P $ROOT/point_clouds $URL/point_clouds/$SCENE.h5;
+
+	((DOWNLOADED++))
+
+	PERCENTAGE=$(($DOWNLOADED * 100 / $TOTAL_SCENES))
+	echo "Downloaded $DOWNLOADED/$TOTAL_SCENES scenes ($PERCENTAGE%)"
+
+done
