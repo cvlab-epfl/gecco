@@ -1,5 +1,10 @@
 # GECCO
 
+<p align="center">
+  <img src="https://github.com/cvlab-epfl/gecco/blob/master/teaser.gif?raw=true" />
+</p>
+
+
 This is the official code release for the paper [GECCO: Geometrically-Conditioned Point Diffusion Models](https://arxiv.org/abs/2303.05916). It contains two implementations: using JAX and PyTorch. The experiments described in the paper were carried out with a JAX codebase. Unfortunately the JAX ecosystem is in a state of constant flux, meaning the package will only work with specific dependency versions, making it difficult to use for future work. For the convenience of the community we also provide a PyTorch reimplementation, as a starting point for future work. In short: if you want to reproduce the numbers (possibly on a different dataset): use JAX. If you want to modify/extend this work - use PyTorch.
 
 | Link | Description |
