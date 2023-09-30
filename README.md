@@ -12,8 +12,8 @@ This is the official code release for the paper [GECCO: Geometrically-Conditione
 |[![Read the paper on arXiv](https://img.shields.io/badge/arXiv-2303.05916-f9f107.svg)](https://arxiv.org/abs/2303.05916) | Read the paper on arXiv |
 |[![Play with ShapeNet in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oOhKIElzU5Db5-JwJoXVI3WblHmAKdE8?usp=sharing)  | Play with GECCO trained on ShapeNet|
 |[![Play with Taskonomy in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/12D_-OIzsthRMlil63JI_LXTyvdEN4OoJ?usp=sharing) | Play with GECCO trained on Taskonomy|
-|[![View interactive examples on ShapeNet](https://img.shields.io/badge/interactive-gallery-blue)](../assets/gecco-demo/shapenet-vol.html) | ShapeNet sample gallery (not cherrypicked, may fail in Firefox) |
-|[![View interactive examples on Taskonomy](https://img.shields.io/badge/interactive-gallery-blue)](../assets/gecco-demo/taskonomy.html) | Taskonomy sample gallery (not cherrypicked, may fail in Firefox) |
+|[![View interactive examples on ShapeNet](https://img.shields.io/badge/interactive-gallery-blue)](https://jatentaki.github.io/assets/gecco-demo/shapenet-vol.html) | ShapeNet sample gallery (not cherrypicked, may fail in Firefox) |
+|[![View interactive examples on Taskonomy](https://img.shields.io/badge/interactive-gallery-blue)](https://jatentaki.github.io/assets/gecco-demo/taskonomy.html) | Taskonomy sample gallery (not cherrypicked, may fail in Firefox) |
 
 ## Usage
 This section contains only infomation shared between the JAX and PyTorch version. For details see the README in each respective package.
